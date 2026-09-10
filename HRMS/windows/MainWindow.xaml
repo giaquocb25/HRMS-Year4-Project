@@ -1,0 +1,154 @@
+﻿<dx:ThemedWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:local="clr-namespace:HRMS"
+    xmlns:dxg1="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    x:Class="HRMS.MainWindow"
+    Title="{DynamicResource mainWindow}"
+    Height="800"
+    Width="1280"
+    MinWidth="1000"
+    WindowStartupLocation="CenterScreen">
+    <dx:ThemedWindow.Resources>
+        <dx:EntitySimpleDataSource x:Key="EntitySimpleDataSource" ContextType="{x:Type local:HUMAN_MANAGEMENTEntities}" Path="Employees">
+            <dx:DesignDataManager.DesignData>
+                <dx:DesignDataSettings RowCount="5"/>
+            </dx:DesignDataManager.DesignData>
+        </dx:EntitySimpleDataSource>
+    </dx:ThemedWindow.Resources>
+    <dx:ThemedWindow.DataContext>
+        <local:MainViewModel/>
+    </dx:ThemedWindow.DataContext>
+    <DockPanel>
+        <dxr:RibbonControl DockPanel.Dock="Top" RibbonStyle="Office2019" ShowApplicationButton="False">
+
+            <dxr:RibbonDefaultPageCategory>
+                <dxr:RibbonPage Caption="{DynamicResource home}">
+                    <dxr:RibbonPageGroup Caption="{DynamicResource operation}">
+                        <dxb:BarButtonItem ItemClick="showPayroll_ItemClick" x:Name="showPayroll" Content="{DynamicResource showPayroll}" LargeGlyph="{dx:DXImage SvgImages/HybridDemoIcons/Tiles/HybridDemo_Salaried.svg}" />
+                        <dxb:BarButtonItem ItemClick="exportPayslip_ItemClick" x:Name="exportPayslip" Content="{DynamicResource exportPayslip}" LargeGlyph="{dx:DXImage SvgImages/Business Objects/BO_Invoice.svg}"/>
+                        <dxb:BarButtonItem ItemClick="image_ItemClick" x:Name="image" Content="{DynamicResource showImage}" LargeGlyph="{dx:DXImage SvgImages/Dashboards/Images.svg}"/>
+                        <dxb:BarButtonItem ItemClick="qr_ItemClick" x:Name="qr" Content="QR" LargeGlyph="{dx:DXImage SvgImages/DiagramIcons/Format/format4.svg}"/>
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+                <dxr:RibbonPage Caption="{DynamicResource setting}">
+                    <dxr:RibbonPageGroup Caption="{DynamicResource displayLanguage}">
+                        <dxb:BarButtonItem x:Name="vietnamese" Content="Tiếng Việt" ItemClick="vietnamese_ItemClick"/>
+                        <dxb:BarButtonItem x:Name="english" Content="English" ItemClick="english_ItemClick"/>
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup Caption="{DynamicResource security}">
+                        <dxb:BarButtonItem x:Name="manageRoles" Content="{DynamicResource manageRoles}" ItemClick="manageRoles_ItemClick"
+                                           LargeGlyph="{dx:DXImage SvgImages/Business Objects/BO_Role.svg}" />
+                        <dxb:BarButtonItem x:Name="viewAuditLog" Content="{DynamicResource systemAudit}" ItemClick="viewAuditLog_ItemClick"
+                                           LargeGlyph="{dx:DXImage SvgImages/Business Objects/BO_Note.svg}" />
+                        <dxb:BarButtonItem x:Name="logout" Content="{DynamicResource logout}" ItemClick="logout_ItemClick" />
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+                <dxr:RibbonPage Caption="{DynamicResource util}">
+                    <dxr:RibbonPageGroup Caption="{DynamicResource operation}">
+                        <dxb:BarButtonItem ItemClick="timekeeping_ItemClick" x:Name="timekeeping" Content="{DynamicResource attendanceHub}" LargeGlyph="{dx:DXImage SvgImages/Business Objects/BO_Document.svg}"/>
+                        <dxb:BarButtonItem ItemClick="qrAttendance_ItemClick" x:Name="qrAttendance" Content="{DynamicResource qrAttendance}" LargeGlyph="{dx:DXImage SvgImages/DiagramIcons/Format/format4.svg}"/>
+                        <dxb:BarButtonItem ItemClick="exportAttendance_ItemClick" x:Name="exportAttendance" Content="{DynamicResource exportAttendance}" LargeGlyph="{dx:DXImage SvgImages/Export/ExportToCSV.svg}" />
+                        <dxb:BarButtonItem Name="caculatePayroll" Content="{DynamicResource calculatePayroll}" LargeGlyph="{dx:DXImage SvgImages/Spreadsheet/CalculateNow.svg}" Command="{Binding CalculatePayrollsCommand}"/>
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+        <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom">
+            <dxr:RibbonStatusBarControl.LeftItems>
+                <dxb:BarStaticItem x:Name="roleStatus" Content="Vai trò: Viewer" />
+            </dxr:RibbonStatusBarControl.LeftItems>
+        </dxr:RibbonStatusBarControl>
+        <dx:DXTabControl>
+            <dx:DXTabItem x:Name="employeesTab" Header="{DynamicResource employees}">
+                <dxg:GridControl x:Name="employeeGridControl" ItemsSource="{Binding Employees}">
+                    <dxg:GridControl.TotalSummary>
+                        <dxg1:GridSummaryItem FieldName="id" SummaryType="Count"/>
+                    </dxg:GridControl.TotalSummary>
+                    <dxg:GridControl.View>
+                        <dxg:TableView ShowTotalSummary="True" 
+                                       ValidateRowCommand="{Binding ValidateEmployeeCommand}"
+                                       ValidateRowDeletionCommand="{Binding ValidateEmployeeDeletionCommand}"
+                                       DataSourceRefreshCommand="{Binding EmployeeRefreshCommand}"
+                                       ShowSearchPanelMode="Always"
+                                       NewItemRowPosition="Top"
+                                       EditFormShowMode="Inline" Margin="0,0,0,0"
+                                       AutoWidth="False" />
+                    </dxg:GridControl.View>
+                    <dxg:GridColumn FieldName="id" IsSmart="True" Header="{DynamicResource id}" AllowEditing="False"/>
+                    <dxg:GridColumn FieldName="employeeCode" IsSmart="True" Header="{DynamicResource employeeCode}" Width="95" />
+                    <dxg:GridColumn FieldName="name" IsSmart="True" Header="{DynamicResource name}"/>
+                    <dxg:GridColumn FieldName="department" IsSmart="True" Header="{DynamicResource department}" Width="120" />
+                    <dxg:GridColumn x:Name="dateOfBirthColumn" FieldName="dateOfBirth" IsSmart="True" Header="{DynamicResource dateOfBirth}" Width="110">
+                        <dxg:GridColumn.EditSettings><dxe:DateEditSettings DisplayFormat="dd/MM/yyyy" /></dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn x:Name="genderColumn" FieldName="gender" IsSmart="True" Header="{DynamicResource gender}" Width="80" />
+                    <dxg:GridColumn x:Name="ageColumn" FieldName="age" IsSmart="True" Header="{DynamicResource age}"/>
+                    <dxg:GridColumn x:Name="phoneColumn" FieldName="phone" IsSmart="True" Header="{DynamicResource phone}" Width="110" />
+                    <dxg:GridColumn x:Name="emailColumn" FieldName="email" IsSmart="True" Header="Email" Width="170" />
+                    <dxg:GridColumn x:Name="addressColumn" FieldName="address" IsSmart="True" Header="{DynamicResource address}"/>
+                    <dxg:GridColumn x:Name="salaryColumn" FieldName="salary" IsSmart="True" Header="{DynamicResource salary}">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="#,###"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="jobTitle" IsSmart="True" Header="{DynamicResource jobTitle}"/>
+                    <dxg:GridColumn FieldName="employmentStatus" IsSmart="True" Header="{DynamicResource employmentStatus}" Width="105" />
+                    <dxg:GridControl.InputBindings>
+                        <KeyBinding Command="{Binding View.Commands.DeleteSelectedRows, ElementName=employeeGridControl}" Key="Delete" />
+                    </dxg:GridControl.InputBindings>
+                </dxg:GridControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem x:Name="payrollsTab" Header="{DynamicResource payrolls}">
+                <dxg:GridControl ItemsSource="{Binding Payrolls}" x:Name="payrollGridControl">
+                    <dxg:GridControl.View>
+                        <dxg:CardView ShowTotalSummary="True" AllowEditing="False" ShowSearchPanelMode="Always"/>
+                    </dxg:GridControl.View>
+                    <dxg:GridColumn FieldName="employeeId" IsSmart="True" Header="{DynamicResource name}">
+                        <dxg:GridColumn.EditSettings>
+                            <dxg:LookUpEditSettings ItemsSource="{Binding Employees}" DisplayMember="name" ValueMember="id"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="amount" IsSmart="True" Header="{DynamicResource amount}">
+                        <dxg:GridColumn.EditSettings>
+                            <dxe:TextEditSettings DisplayFormat="#,###"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="workdays" IsSmart="True" Header="{DynamicResource workingDays}"/>
+                    <dxg:GridColumn FieldName="month" IsSmart="True" GroupIndex="0" Header="{DynamicResource month}" SortOrder="Descending"/>
+                </dxg:GridControl>
+            </dx:DXTabItem>
+            <dx:DXTabItem x:Name="timekeepingsTab" Header="{DynamicResource timekeepings}" >
+                <dxg:GridControl ItemsSource="{Binding Timekeepings}" >
+                    <dxg:GridControl.View>
+                        <dxg:TableView AutoWidth="True" AllowEditing="False" ShowSearchPanelMode="Always"/>
+                    </dxg:GridControl.View>
+                    <dxg:GridColumn FieldName="employeeId" IsSmart="True" Header="{DynamicResource name}">
+                        <dxg:GridColumn.EditSettings>
+                            <dxg:LookUpEditSettings ItemsSource="{Binding Employees}" DisplayMember="name" ValueMember="id"/>
+                        </dxg:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn  FieldName="arriveTime" IsSmart="True" Header="{DynamicResource arriveTime}" SortOrder="Ascending" SortIndex="0">
+                        <dxg1:GridColumn.EditSettings>
+                            <dxe:DateEditSettings DisplayFormat=" {0:hh}:{0:mm}:{0:ss}" Mask="hh:mm:ss"/>
+                        </dxg1:GridColumn.EditSettings>
+
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="leaveTime" IsSmart="True"  Header="{DynamicResource leaveTime}">
+                        <dxg1:GridColumn.EditSettings>
+                            <dxe:DateEditSettings DisplayFormat=" {0:hh}:{0:mm}:{0:ss}" Mask="hh:mm:ss"/>
+                        </dxg1:GridColumn.EditSettings>
+                    </dxg:GridColumn>
+                    <dxg:GridColumn FieldName="workDate" IsSmart="True"  Header="{DynamicResource date}" GroupIndex="0" SortOrder="Descending" GroupInterval="Date"/>
+                    <dxg:GridColumn FieldName="workedHours" IsSmart="True" Header="{DynamicResource workedHours}" />
+                    <dxg:GridColumn FieldName="attendanceStatus" IsSmart="True" Header="{DynamicResource attendanceStatus}" />
+                </dxg:GridControl>
+            </dx:DXTabItem>
+        </dx:DXTabControl>
+    </DockPanel>
+</dx:ThemedWindow>

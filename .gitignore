@@ -1,0 +1,46 @@
+# Visual Studio and build output
+.vs/
+.cr/
+**/bin/
+**/obj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet packages restored locally
+packages/
+db/
+Database/*.sql
+!Database/schema.sql
+!Database/seed-demo-data.sql
+!Database/migrate_2026_multisource_attendance.sql
+!Database/machine-view-example.sql
+!Database/machine-view-example-sqlserver.sql
+!Database/role-grants-example.sql
+!Database/verify-installation.sql
+
+# React Native
+**/node_modules/
+.pnpm-store/
+**/.gradle/
+**/android/app/build/
+**/android/build/
+**/ios/Pods/
+**/.bundle/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local configuration and secrets
+*.local.config
+.env
+.env.*
+!.env.example
+HRMS/machine.local.config
+*.pfx
+*.p12
+
+# OS files
+.DS_Store
+Thumbs.db

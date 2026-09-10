@@ -1,0 +1,59 @@
+﻿<dx:ThemedWindow
+    x:Class="HRMS.windows.PayrollWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxc="http://schemas.devexpress.com/winfx/2008/xaml/charts"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:local="clr-namespace:HRMS"
+    Width="658"
+    Height="423.2"
+    Title="{DynamicResource payrollWindow}">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label
+            x:Name="label"
+            Grid.Row="0"
+            VerticalContentAlignment="Center"
+            Content="Label"
+            FontSize="16"
+            FontWeight="Bold" />
+        <dxg:GridControl
+            x:Name="gridControl"
+            Grid.Row="1"
+            Height="200"
+            ItemsSource="{Binding Payrolls}">
+            <dxg:GridControl.View>
+                <dxg:CardView
+                    AllowedGroupFilters="None"
+                    AllowEditing="False"
+                    ShowGroupPanel="False"
+                    ShowTotalSummary="True" />
+            </dxg:GridControl.View>
+            <dxg:GridColumn FieldName="amount" Header="{DynamicResource amount}" IsSmart="True" />
+            <dxg:GridColumn
+                AllowSorting="True"
+                SortOrder="Descending"
+                SortIndex="0"
+                FieldName="month"
+                Header="{DynamicResource month}"
+                IsSmart="True" />
+        </dxg:GridControl>
+        <dxc:ChartControl  Grid.Row="2" DataSource="{Binding Payrolls}" >
+            <dxc:ChartControl.Legends>
+                <dxc:Legend/>
+            </dxc:ChartControl.Legends>
+            <dxc:XYDiagram2D>
+                <dxc:BarSideBySideSeries2D DisplayName="{DynamicResource amount}" ArgumentDataMember="month" ValueDataMember="amount" />
+            </dxc:XYDiagram2D>
+        </dxc:ChartControl>
+    </Grid>
+
+
+</dx:ThemedWindow>

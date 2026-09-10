@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "HRMS Run (F5)",
+      "type": "clr",
+      "request": "launch",
+      "noDebug": true,
+      "program": "${workspaceFolder}\\HRMS\\bin\\Debug\\HRMS.exe",
+      "cwd": "${workspaceFolder}\\HRMS\\bin\\Debug",
+      "env": {
+        "HRMS_DATABASE_SSL_MODE": "Disabled",
+        "HRMS_ALLOW_PUBLIC_KEY_RETRIEVAL": "true"
+      },
+      "preLaunchTask": "Prepare HRMS Debug"
+    }
+  ]
+}

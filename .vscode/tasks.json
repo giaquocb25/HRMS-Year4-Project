@@ -1,0 +1,71 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start HRMS MySQL",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\start-local-mysql.ps1"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build HRMS Debug",
+      "type": "process",
+      "command": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe",
+      "args": [
+        "${workspaceFolder}\\HRMS.sln",
+        "/t:Build",
+        "/p:Configuration=Debug",
+        "/nologo",
+        "/clp:ErrorsOnly;Summary"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Prepare HRMS Debug",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Start HRMS MySQL",
+        "Build HRMS Debug"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run HRMS",
+      "type": "process",
+      "command": "${workspaceFolder}\\HRMS\\bin\\Debug\\HRMS.exe",
+      "options": {
+        "cwd": "${workspaceFolder}\\HRMS\\bin\\Debug",
+        "env": {
+          "HRMS_DATABASE_SSL_MODE": "Disabled",
+          "HRMS_ALLOW_PUBLIC_KEY_RETRIEVAL": "true"
+        }
+      },
+      "dependsOn": "Prepare HRMS Debug",
+      "problemMatcher": []
+    },
+    {
+      "label": "Stop HRMS MySQL",
+      "type": "process",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\stop-local-mysql.ps1"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

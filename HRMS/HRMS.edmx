@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HUMAN_MANAGEMENTModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="8.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="employeeCode" Type="varchar" MaxLength="30" />
+          <Property Name="department" Type="varchar" MaxLength="100" />
+          <Property Name="dateOfBirth" Type="date" />
+          <Property Name="gender" Type="varchar" MaxLength="20" />
+          <Property Name="phone" Type="varchar" MaxLength="20" />
+          <Property Name="email" Type="varchar" MaxLength="150" />
+          <Property Name="employmentStatus" Type="varchar" MaxLength="30" />
+          <Property Name="age" Type="varchar" MaxLength="3" />
+          <Property Name="address" Type="varchar" MaxLength="255" />
+          <Property Name="salary" Type="int" Nullable="false" />
+          <Property Name="jobTitle" Type="varchar" MaxLength="100" />
+          <Property Name="image" Type="longblob" />
+          <Property Name="createdTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="updatedTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Payroll">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="employeeId" Type="int" Nullable="false" />
+          <Property Name="workdays" Type="int" Nullable="false" />
+          <Property Name="amount" Type="int" Nullable="false" />
+          <Property Name="month" Type="char" MaxLength="7" Nullable="false" />
+          <Property Name="createdTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="updatedTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Timekeeping">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="employeeId" Type="int" Nullable="false" />
+          <Property Name="arriveTime" Type="time" Precision="0" Nullable="false" />
+          <Property Name="leaveTime" Type="time" Precision="0" Nullable="false" />
+          <Property Name="workDate" Type="date" Nullable="false" />
+          <Property Name="createdTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="updatedTime" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <Association Name="employee">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Timekeeping" Type="Self.Timekeeping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Timekeeping">
+              <PropertyRef Name="employeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Salary_ibfk_1">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Payroll" Type="Self.Payroll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Payroll">
+              <PropertyRef Name="employeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HUMAN_MANAGEMENTModelStoreContainer">
+          <EntitySet Name="Employees" EntityType="Self.Employees" Schema="HUMAN_MANAGEMENT" store:Type="Tables" />
+          <EntitySet Name="Payroll" EntityType="Self.Payroll" Schema="HUMAN_MANAGEMENT" store:Type="Tables" />
+          <EntitySet Name="Timekeeping" EntityType="Self.Timekeeping" Schema="HUMAN_MANAGEMENT" store:Type="Tables" />
+          <AssociationSet Name="employee" Association="Self.employee">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Timekeeping" EntitySet="Timekeeping" />
+          </AssociationSet>
+          <AssociationSet Name="Salary_ibfk_1" Association="Self.Salary_ibfk_1">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Payroll" EntitySet="Payroll" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HUMAN_MANAGEMENTModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="employeeCode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="department" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="dateOfBirth" Type="DateTime" />
+          <Property Name="gender" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="employmentStatus" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="age" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="salary" Type="Int32" Nullable="false" />
+          <Property Name="jobTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="createdTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="updatedTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Timekeepings" Relationship="HUMAN_MANAGEMENTModel.employee1" FromRole="Employees" ToRole="Timekeeping" />
+          <NavigationProperty Name="Payrolls" Relationship="Self.Salary_ibfk_1" FromRole="Employees" ToRole="Payroll" />
+          <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Payroll">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employeeId" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Int32" Nullable="false" />
+          <Property Name="month" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="createdTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="updatedTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Employee" Relationship="HUMAN_MANAGEMENTModel.Salary_ibfk_1" FromRole="Payroll" ToRole="Employees" />
+          <Property Name="workdays" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Timekeeping">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employeeId" Type="Int32" Nullable="false" />
+          <Property Name="arriveTime" Type="Time" Nullable="false" />
+          <Property Name="leaveTime" Type="Time" Nullable="false" />
+          <Property Name="workDate" Type="DateTime" Nullable="false" />
+          <Property Name="createdTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="updatedTime" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Employee" Relationship="HUMAN_MANAGEMENTModel.employee1" FromRole="Timekeeping" ToRole="Employees" />
+        </EntityType>
+        <Association Name="employee1">
+          <End Role="Employees" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Timekeeping" Type="Self.Timekeeping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Timekeeping">
+              <PropertyRef Name="employeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Salary_ibfk_1">
+          <End Role="Employees" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Payroll" Type="Self.Payroll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Payroll">
+              <PropertyRef Name="employeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HUMAN_MANAGEMENTEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="Payrolls" EntityType="Self.Payroll" />
+          <EntitySet Name="Timekeepings" EntityType="Self.Timekeeping" />
+          <AssociationSet Name="employee" Association="Self.employee1">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Timekeeping" EntitySet="Timekeepings" />
+          </AssociationSet>
+          <AssociationSet Name="Salary_ibfk_1" Association="Self.Salary_ibfk_1">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Payroll" EntitySet="Payrolls" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HUMAN_MANAGEMENTModelStoreContainer" CdmEntityContainer="HUMAN_MANAGEMENTEntities">
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="HUMAN_MANAGEMENTModel.Employee">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="employeeCode" ColumnName="employeeCode" />
+                <ScalarProperty Name="department" ColumnName="department" />
+                <ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="employmentStatus" ColumnName="employmentStatus" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="jobTitle" ColumnName="jobTitle" />
+                <ScalarProperty Name="createdTime" ColumnName="createdTime" />
+                <ScalarProperty Name="updatedTime" ColumnName="updatedTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payrolls">
+            <EntityTypeMapping TypeName="HUMAN_MANAGEMENTModel.Payroll">
+              <MappingFragment StoreEntitySet="Payroll">
+                <ScalarProperty Name="workdays" ColumnName="workdays" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="employeeId" ColumnName="employeeId" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="month" ColumnName="month" />
+                <ScalarProperty Name="createdTime" ColumnName="createdTime" />
+                <ScalarProperty Name="updatedTime" ColumnName="updatedTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Timekeepings">
+            <EntityTypeMapping TypeName="HUMAN_MANAGEMENTModel.Timekeeping">
+              <MappingFragment StoreEntitySet="Timekeeping">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="employeeId" ColumnName="employeeId" />
+                <ScalarProperty Name="arriveTime" ColumnName="arriveTime" />
+                <ScalarProperty Name="leaveTime" ColumnName="leaveTime" />
+                <ScalarProperty Name="workDate" ColumnName="workDate" />
+                <ScalarProperty Name="createdTime" ColumnName="createdTime" />
+                <ScalarProperty Name="updatedTime" ColumnName="updatedTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,137 @@
+<dx:ThemedWindow
+    x:Class="HRMS.windows.AttendanceHubWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    Title="{DynamicResource attendanceHub}" Width="760" Height="620"
+    WindowStartupLocation="CenterOwner">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="{DynamicResource manualCardTab}">
+                <StackPanel Margin="20">
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{DynamicResource noQrTitle}" />
+                    <TextBlock Margin="0,6,0,18" TextWrapping="Wrap"
+                               Text="Nhập mã nhân viên hoặc quét thẻ USB (keyboard wedge), rồi nhấn Enter. Lần quét đầu là giờ vào; lần tiếp theo trong ngày cập nhật giờ ra." />
+                    <TextBlock Text="{DynamicResource identifier}" />
+                    <TextBox x:Name="identifierTextBox" Height="36" Margin="0,6,0,10" FontSize="18"
+                             KeyDown="identifierTextBox_KeyDown" />
+                    <Button x:Name="recordNowButton" Content="{DynamicResource recordNow}" Width="150" Height="34" HorizontalAlignment="Left"
+                            Click="recordNow_Click" />
+                    <Separator Margin="0,22,0,14" />
+                    <TextBlock FontSize="16" FontWeight="SemiBold" Text="{DynamicResource bindCardTitle}" />
+                    <TextBlock Margin="0,8,0,3" Text="{DynamicResource employee}" />
+                    <ComboBox x:Name="employeeComboBox" Height="32" DisplayMemberPath="name" SelectedValuePath="id" />
+                    <TextBlock Margin="0,10,0,3" Text="{DynamicResource cardUid}" />
+                    <TextBox x:Name="cardUidTextBox" Height="32" KeyDown="cardUidTextBox_KeyDown" />
+                    <Button x:Name="bindCardButton" Content="{DynamicResource bindCard}" Width="120" Height="32" Margin="0,10,0,0" HorizontalAlignment="Left"
+                            Click="bindCard_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource fileImportTab}">
+                <StackPanel Margin="20">
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{DynamicResource fileImportTitle}" />
+                    <TextBlock Margin="0,6,0,16" TextWrapping="Wrap"
+                               Text="Hỗ trợ .xlsx, .csv, .tsv và .txt. Dòng đầu là tiêu đề; cần event_time và employee_id, employee_code hoặc card_uid. event_id được khuyến nghị để chống trùng tuyệt đối." />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="filePathTextBox" Height="32" IsReadOnly="True" />
+                        <Button Grid.Column="1" Content="{DynamicResource chooseFile}" Width="100" Margin="8,0,0,0" Click="chooseFile_Click" />
+                    </Grid>
+                    <Button x:Name="importFileButton" Content="{DynamicResource importData}" Width="130" Height="34" Margin="0,14,0,0" HorizontalAlignment="Left"
+                            Click="importFile_Click" />
+                    <TextBlock Margin="0,20,0,0" Text="Ví dụ tiêu đề:" FontWeight="SemiBold" />
+                    <TextBox Margin="0,5,0,0" IsReadOnly="True" Text="employee_id,employee_code,card_uid,event_time,event_id" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource machineDatabaseTab}">
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,14" TextWrapping="Wrap"
+                               Text="Kết nối MySQL hoặc SQL Server ở chế độ chỉ đọc. Tạo view chuẩn hrms_attendance_export theo file mẫu trong thư mục Database để tích hợp từng hãng máy." />
+                    <TextBlock Grid.Row="1" Text="{DynamicResource databaseProvider}" VerticalAlignment="Center" />
+                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="machineProviderComboBox" Margin="0,3" />
+                    <TextBlock Grid.Row="2" Text="{DynamicResource server}" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="machineServerTextBox" Text="localhost" Margin="0,3" />
+                    <TextBlock Grid.Row="3" Text="{DynamicResource port}" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="machinePortTextBox" Text="3306" Margin="0,3" />
+                    <TextBlock Grid.Row="4" Text="{DynamicResource database}" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="machineDatabaseTextBox" Margin="0,3" />
+                    <TextBlock Grid.Row="5" Text="{DynamicResource readOnlyAccount}" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="5" Grid.Column="1" x:Name="machineUsernameTextBox" Margin="0,3" />
+                    <TextBlock Grid.Row="6" Text="{DynamicResource password}" VerticalAlignment="Center" />
+                    <PasswordBox Grid.Row="6" Grid.Column="1" x:Name="machinePasswordBox" Margin="0,3" />
+                    <TextBlock Grid.Row="7" Text="{DynamicResource viewName}" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="machineViewTextBox" Text="hrms_attendance_export" Margin="0,3" />
+                    <TextBlock Grid.Row="8" Text="{DynamicResource syncSince}" VerticalAlignment="Center" />
+                    <DatePicker Grid.Row="8" Grid.Column="1" x:Name="machineSincePicker" Margin="0,3" />
+                    <Button x:Name="syncMachineButton" Grid.Row="9" Grid.Column="1" Content="{DynamicResource syncNow}" Width="170" Height="34"
+                            Margin="0,14,0,0" HorizontalAlignment="Left" Click="syncMachine_Click" />
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="correctionTab" Header="{DynamicResource attendanceCorrection}">
+                <StackPanel Margin="20">
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{DynamicResource attendanceCorrection}" />
+                    <TextBlock Margin="0,6,0,16" TextWrapping="Wrap" Text="{DynamicResource correctionHelp}" />
+                    <TextBlock Text="{DynamicResource employee}" />
+                    <ComboBox x:Name="correctionEmployeeComboBox" Height="32" Margin="0,4,0,10"
+                              DisplayMemberPath="name" SelectedValuePath="id" />
+                    <TextBlock Text="{DynamicResource date}" />
+                    <DatePicker x:Name="correctionDatePicker" Height="32" Margin="0,4,0,10" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="16" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource arriveTime}" />
+                            <TextBox x:Name="correctionArriveTextBox" Height="32" Margin="0,4,0,0" Text="08:00" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{DynamicResource leaveTime}" />
+                            <TextBox x:Name="correctionLeaveTextBox" Height="32" Margin="0,4,0,0" Text="17:00" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Margin="0,12,0,0" Text="{DynamicResource correctionReason}" />
+                    <TextBox x:Name="correctionReasonTextBox" Height="70" Margin="0,4,0,0"
+                             TextWrapping="Wrap" AcceptsReturn="True" MaxLength="500" />
+                    <Button Content="{DynamicResource saveCorrection}" Width="160" Height="34" Margin="0,14,0,0"
+                            HorizontalAlignment="Left" Click="correctAttendance_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource auditLog}">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                    <Button Content="{DynamicResource refresh}" Width="100" Height="30" HorizontalAlignment="Left" Click="refreshAudit_Click" />
+                    <DataGrid Grid.Row="1" x:Name="auditGrid" Margin="0,10,0,0" IsReadOnly="True" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{DynamicResource employee}" Binding="{Binding EmployeeName}" Width="*" />
+                            <DataGridTextColumn Header="Thời gian" Binding="{Binding EventTime, StringFormat=dd/MM/yyyy HH:mm:ss}" Width="145" />
+                            <DataGridTextColumn Header="{DynamicResource source}" Binding="{Binding Source}" Width="110" />
+                            <DataGridTextColumn Header="{DynamicResource device}" Binding="{Binding DeviceName}" Width="130" />
+                            <DataGridTextColumn Header="{DynamicResource createdBy}" Binding="{Binding CreatedBy}" Width="110" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Border Grid.Row="1" Margin="0,12,0,0" Padding="10" Background="#FFF3F6FA" CornerRadius="4">
+            <TextBlock x:Name="statusTextBlock" Text="Sẵn sàng." TextWrapping="Wrap" />
+        </Border>
+    </Grid>
+</dx:ThemedWindow>
